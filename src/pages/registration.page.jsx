@@ -29,17 +29,18 @@ export default function RegistrationForm() {
       acceptedTerms: false,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       console.log("Form submitted with values:", values);
+      resetForm();
     },
   });
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen">
-      <div className="w-3/4 md:w-2/5 p-3">
-        <p className="text-3xl font-bold my-5">Registration Form</p>
+    <div className="flex justify-center items-center h-screen w-screen bg-[#7ED7C1]">
+      <div className="w-3/4 md:w-2/5 p-3 shadow-xl rounded-md  px-4 bg-[#9AD0C2]">
+        <p className="text-4xl font-bold my-5">Registration Form</p>
         <form onSubmit={formik.handleSubmit} className="">
-          <div className="py-2 ">
+          <div className="py-2 my-1 mb-2 max-h-24">
             <label htmlFor="firstName" className="text-base font-medium">
               First Name
             </label>
@@ -51,13 +52,15 @@ export default function RegistrationForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.firstName}
-              className="my-2 w-3/4 bg-gray-200 p-1.5 rounded-md"
+              className="mt-2 w-3/4 bg-gray-200 p-1.5 rounded-md border border-gray-400"
             />
             {formik.touched.firstName && formik.errors.firstName ? (
-              <div>{formik.errors.firstName}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.firstName}
+              </div>
             ) : null}
           </div>
-          <div>
+          <div className="py-2 my-1 mb-2 max-h-24">
             <label htmlFor="lastName" className="text-base font-medium">
               Last Name
             </label>
@@ -69,13 +72,15 @@ export default function RegistrationForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.lastName}
-              className="my-2 w-3/4 bg-gray-200 p-1.5 rounded-md"
+              className="mt-2 w-3/4 bg-gray-200 p-1.5 rounded-md border border-gray-400"
             />
             {formik.touched.lastName && formik.errors.lastName ? (
-              <div>{formik.errors.lastName}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.lastName}
+              </div>
             ) : null}
           </div>
-          <div>
+          <div className="py-2 my-1 mb-2 max-h-24">
             <label htmlFor="email" className="text-base font-medium">
               Email
             </label>
@@ -87,13 +92,15 @@ export default function RegistrationForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
-              className="my-2 w-3/4 bg-gray-200 p-1.5 rounded-md"
+              className="mt-2 w-3/4 bg-gray-200 p-1.5 rounded-md border border-gray-400"
             />
             {formik.touched.email && formik.errors.email ? (
-              <div>{formik.errors.email}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.email}
+              </div>
             ) : null}
           </div>
-          <div>
+          <div className="py-2 my-1 mb-2 max-h-24">
             <label htmlFor="phone" className="text-base font-medium">
               Phone Number
             </label>
@@ -105,13 +112,15 @@ export default function RegistrationForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.phone}
-              className="my-2 w-3/4 bg-gray-200 p-1.5 rounded-md"
+              className="mt-2 w-3/4 bg-gray-200 p-1.5 rounded-md border border-gray-400"
             />
             {formik.touched.phone && formik.errors.phone ? (
-              <div>{formik.errors.phone}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.phone}
+              </div>
             ) : null}
           </div>
-          <div>
+          <div className="py-2 my-1 mb-2 max-h-24">
             <label htmlFor="username" className="text-base font-medium">
               Username
             </label>
@@ -123,10 +132,12 @@ export default function RegistrationForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.username}
-              className="my-2 w-3/4 bg-gray-200 p-1.5 rounded-md"
+              className="mt-2 w-3/4 bg-gray-200 p-1.5 rounded-md border border-gray-400"
             />
             {formik.touched.username && formik.errors.username ? (
-              <div>{formik.errors.username}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.username}
+              </div>
             ) : null}
           </div>
           <div className="mt-2">
@@ -138,7 +149,7 @@ export default function RegistrationForm() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 checked={formik.values.acceptedTerms}
-                className="appearance-none h-4 w-4 mr-2 bg-gray-200 rounded-sm"
+                className="appearance-none h-4 w-4 mr-2 bg-gray-200 rounded border border-gray-400"
               />
               {formik.values.acceptedTerms && (
                 <span
@@ -150,16 +161,23 @@ export default function RegistrationForm() {
                 </span>
               )}
               I accept the{" "}
-              <span className="text-blue-600 font-medium">
+              <span className="ml-1 text-blue-600 font-medium">
                 terms and conditions
               </span>
             </label>
             {formik.touched.acceptedTerms && formik.errors.acceptedTerms ? (
-              <div>{formik.errors.acceptedTerms}</div>
+              <div className="text-xs text-red-500 mt-2">
+                {formik.errors.acceptedTerms}
+              </div>
             ) : null}
           </div>
-          <div>
-            <button type="submit">Submit</button>
+          <div className="mt-4">
+            <button
+              type="submit"
+              className="w-3/4 mx-auto bg-[#427D9D] p-1 rounded-md"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </div>
