@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as Yup from "yup";
+import { userContext } from "../context/UserContextProvider";
+import axios from "axios";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().min(3).max(10).required("First Name is required"),
@@ -10,9 +12,17 @@ const validationSchema = Yup.object({
 });
 
 export default function Home() {
-  const [firstName, setFirstName] = useState("Vishnu");
-  const [lastName, setLastName] = useState("Thakur");
-  const [phoneNumber, setPhoneNumber] = useState("9821820403");
+  const { user, setUser } = useContext(userContext);
+  const {
+    _id,
+    firstName: contextFirstName,
+    lastName: contextLastName,
+    phone: contextPhone,
+  } = user;
+
+  const [firstName, setFirstName] = useState(contextFirstName);
+  const [lastName, setLastName] = useState(contextLastName);
+  const [phoneNumber, setPhoneNumber] = useState(contextPhone);
   const [editMode, setEditMode] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -20,14 +30,25 @@ export default function Home() {
     setValidationErrors({});
     setEditMode(true);
   };
+  const url = "http://localhost:5500/updateuser";
 
   const handleSaveClick = () => {
     const valuesToValidate = { firstName, lastName, phoneNumber };
     validationSchema
       .validate(valuesToValidate, { abortEarly: false })
-      .then(() => {
+      .then(async () => {
         setEditMode(false);
-        // Add logic to save the edited values if needed
+        try {
+          const respose = await axios.post(url, {
+            id: _id,
+            firstName,
+            lastName,
+            phone: phoneNumber,
+          });
+          setUser(respose.data.data);
+        } catch (err) {
+          console.log(err);
+        }
       })
       .catch((errors) => {
         const newErrors = {};

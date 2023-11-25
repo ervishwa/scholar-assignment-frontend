@@ -1,6 +1,9 @@
 import { useFormik } from "formik";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { userContext } from "../context/UserContextProvider";
+import axios from "axios";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().min(3).max(10).required("First Name is required"),
@@ -21,6 +24,8 @@ const validationSchema = Yup.object({
 export default function RegistrationForm() {
   const navigate = useNavigate();
 
+  const { setUser } = useContext(userContext);
+  const url = "http://localhost:5500/createUser";
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -31,8 +36,20 @@ export default function RegistrationForm() {
       acceptedTerms: false,
     },
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log("Form submitted with values:", values);
+    onSubmit: async (values, { resetForm }) => {
+      const { firstName, lastName, email, phone, username } = values;
+      try {
+        const response = await axios.post(url, {
+          firstName,
+          lastName,
+          email,
+          phone,
+          username,
+        });
+        setUser(response.data.data);
+      } catch (err) {
+        console.log(err);
+      }
       resetForm();
       navigate("/home");
     },
