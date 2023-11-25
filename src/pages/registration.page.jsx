@@ -1,10 +1,10 @@
-import React from "react";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().max(5).required("First Name is required"),
-  lastName: Yup.string().max(5).required("Last Name is required"),
+  firstName: Yup.string().min(3).max(10).required("First Name is required"),
+  lastName: Yup.string().min(3).max(7).required("Last Name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
@@ -19,6 +19,8 @@ const validationSchema = Yup.object({
 });
 
 export default function RegistrationForm() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -32,6 +34,7 @@ export default function RegistrationForm() {
     onSubmit: (values, { resetForm }) => {
       console.log("Form submitted with values:", values);
       resetForm();
+      navigate("/home");
     },
   });
 
