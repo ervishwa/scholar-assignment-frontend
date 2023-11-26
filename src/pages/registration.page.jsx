@@ -27,7 +27,7 @@ export default function RegistrationForm() {
   const navigate = useNavigate();
 
   const { setUser } = useContext(userContext);
-  const url = "http://localhost:5500/createUser";
+  const url = "https://scholar-backend-byxt.onrender.com/createUser";
 
   const showToast = (message, type) => {
     toast[type](message, { position: "top-right" });
@@ -60,8 +60,6 @@ export default function RegistrationForm() {
           phone,
           username,
         });
-
-        console.log(response);
         if (response.data.exists) {
           handleError(response.data.msg);
         } else {
@@ -70,7 +68,7 @@ export default function RegistrationForm() {
           resetForm();
           setTimeout(() => {
             navigate("/home");
-          }, 2000);
+          }, 1000);
         }
       } catch (err) {
         handleError(err.message);

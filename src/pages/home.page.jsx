@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { userContext } from "../context/UserContextProvider";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().min(3).max(10).required("First Name is required"),
@@ -29,6 +30,8 @@ export default function Home() {
   const [newfirstName, setNewFirstName] = useState(firstName);
   const [newlastName, setNewLastName] = useState(lastName);
 
+  const navigate = useNavigate();
+
   const handleEditClick = () => {
     setValidationErrors({});
     setEditMode(true);
@@ -46,7 +49,7 @@ export default function Home() {
     showToast(`Updation failed: ${errorMessage}`, "error");
   };
 
-  const url = "http://localhost:5500/updateuser";
+  const url = "https://scholar-backend-byxt.onrender.com/updateuser";
 
   const handleSaveClick = () => {
     const valuesToValidate = { firstName, lastName, phoneNumber };
@@ -64,7 +67,7 @@ export default function Home() {
           handleSuccess();
           setUser(respose.data.data);
           setNewFirstName(respose.data.data.firstName);
-          setLastName(respose.data.data.lastName);
+          setNewLastName(respose.data.data.lastName);
         } catch (err) {
           handleError("Something went wrong");
         }
@@ -166,6 +169,12 @@ export default function Home() {
         </div>
       </div>
       <ToastContainer />
+      <button
+        className="border border-black p-2 w-1/4 bg-[#427D9D] rounded-md mt-4"
+        onClick={() => navigate("/")}
+      >
+        Register Again
+      </button>
     </div>
   );
 }
