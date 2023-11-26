@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { userContext } from "../context/UserContextProvider";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().min(3).max(10).required("First Name is required"),
@@ -26,6 +28,18 @@ export default function RegistrationForm() {
 
   const { setUser } = useContext(userContext);
   const url = "http://localhost:5500/createUser";
+
+  const showToast = (message, type) => {
+    toast[type](message, { position: "top-right" });
+  };
+
+  const handleSuccess = () => {
+    showToast("Registration successful!", "success");
+  };
+
+  const handleError = (errorMessage) => {
+    showToast(`Registration failed: ${errorMessage}`, "error");
+  };
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -46,12 +60,21 @@ export default function RegistrationForm() {
           phone,
           username,
         });
-        setUser(response.data.data);
+
+        console.log(response);
+        if (response.data.exists) {
+          handleError(response.data.msg);
+        } else {
+          setUser(response.data.data);
+          handleSuccess();
+          resetForm();
+          setTimeout(() => {
+            navigate("/home");
+          }, 2000);
+        }
       } catch (err) {
-        console.log(err);
+        handleError(err.message);
       }
-      resetForm();
-      navigate("/home");
     },
   });
 
@@ -201,6 +224,7 @@ export default function RegistrationForm() {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

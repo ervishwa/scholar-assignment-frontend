@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import * as Yup from "yup";
 import { userContext } from "../context/UserContextProvider";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().min(3).max(10).required("First Name is required"),
@@ -25,11 +26,26 @@ export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState(contextPhone);
   const [editMode, setEditMode] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
+  const [newfirstName, setNewFirstName] = useState(firstName);
+  const [newlastName, setNewLastName] = useState(lastName);
 
   const handleEditClick = () => {
     setValidationErrors({});
     setEditMode(true);
   };
+
+  const showToast = (message, type) => {
+    toast[type](message, { position: "top-right" });
+  };
+
+  const handleSuccess = () => {
+    showToast("User Updated successfully", "success");
+  };
+
+  const handleError = (errorMessage) => {
+    showToast(`Updation failed: ${errorMessage}`, "error");
+  };
+
   const url = "http://localhost:5500/updateuser";
 
   const handleSaveClick = () => {
@@ -45,9 +61,12 @@ export default function Home() {
             lastName,
             phone: phoneNumber,
           });
+          handleSuccess();
           setUser(respose.data.data);
+          setNewFirstName(respose.data.data.firstName);
+          setLastName(respose.data.data.lastName);
         } catch (err) {
-          console.log(err);
+          handleError("Something went wrong");
         }
       })
       .catch((errors) => {
@@ -62,7 +81,7 @@ export default function Home() {
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center">
       <p className="text-3xl font-bold my-4">
-        Welcome {firstName} {lastName}
+        Welcome {newfirstName} {newlastName}
       </p>
       <div className="w-3/4 bg-[#9AD0C2] p-5">
         <div className="py-2">
@@ -146,6 +165,7 @@ export default function Home() {
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
